@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
+	before_action :set_user, only: [:show, :edit, :update]
 
 	def show
-		@user = User.find(params[:id])
 		@articles = @user.articles.paginate(page: params[:page], per_page: 3)
 	end
 
@@ -14,12 +14,10 @@ class UsersController < ApplicationController
 	end
 
 	def edit
-		@user = User.find(params[:id])  #This will find-out an user based on the id in user table
-	end
+		end
 
 	def update
-		@user = User.find(params[:id])
-			if @user.update(user_params)
+				if @user.update(user_params)
 			flash[:notice] = "Your account info was updated"
 			redirect_to @user #short for user path which require an object
 		else
@@ -32,6 +30,7 @@ class UsersController < ApplicationController
 	def create
 		@user = User.new(user_params)
 		if @user.save
+			session[:user_id] = @user.id
 			flash[:notice] = "Welcome to My Blog #{@user.username}, you have signed-up!"
 			redirect_to articles_path
 		else
@@ -43,6 +42,10 @@ class UsersController < ApplicationController
 
 	def user_params
 		params.require(:user).permit(:username, :email, :password)
+	end
+
+	def set_user
+		@user = User.find(params[:id])
 	end
 
 end
