@@ -6,7 +6,14 @@ def current_user
 	end
 
 def logged_in?
-		!!current_user
+		!!current_user #if is logged "!!"
 	end
+
+def require_user
+	if !logged_in? #if isn't logged "!"
+		flash[:alert] = "You must be logged in to perform that action"
+		redirect_to login_path
+	end
+end
 
 end
